@@ -3,7 +3,7 @@ import sys, os
 
 from pymongo import MongoClient
 from langdetect import detect
-from google.cloud import translate
+#from google.cloud import translate
 
 # use http://gearman.org/examples/reverse/ later
 if __name__ == '__main__':

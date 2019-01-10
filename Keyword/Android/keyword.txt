@@ -1,0 +1,20 @@
+; comment start with `;`, category start with `#`
+; group as category
+; ref: https://source.android.com/security/reports/Google_Android_Security_PHA_classifications.pdf
+; ref: https://source.android.com/security/reports/Google_Android_Security_2017_Report_Final.pdf
+
+# ads
+
+
+# Toll fraud
+
+
+# Misc
+deceptive
+hoax
+scam
+don't download
+do not download
+fake
+rubbish
+Deducts
