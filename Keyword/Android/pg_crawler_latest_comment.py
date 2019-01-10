@@ -58,10 +58,12 @@ if __name__ == '__main__':
                 #if review.lower().find("cheat") != -1 or review_title.lower().find("cheat") != -1:
                 #if review.lower().find("ads") != -1 or review_title.lower().find("ads") != -1:
                 # if review.lower().find("virus") != -1 or review_title.lower().find("virus") != -1:
-                #if review.lower().find("torjan") != -1 or review_title.lower().find("torjan") != -1:
+                # if review.lower().find("torjan") != -1 or review_title.lower().find("torjan") != -1:
                 # if review.lower().find("root") != -1 or review_title.lower().find("root") != -1:
+                # if review.lower().find("airtime") != -1 or review_title.lower().find("airtime") != -1:
+                #if review.lower().find("fraud") != -1 or review_title.lower().find("fraud") != -1:
                 if review_star =='1':
-                    if review.lower().find("cheat") != -1 or review_title.lower().find("cheat") != -1:
+                    if review.lower().find("airtime") != -1 or review_title.lower().find("airtime") != -1:
 
                         ll += 1
                         # if ll % 20 == 0:
