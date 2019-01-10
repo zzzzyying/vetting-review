@@ -3,7 +3,9 @@ import sys, os
 
 from pymongo import MongoClient
 from langdetect import detect
-
+import time
+import datetime
+import trans
 # use http://gearman.org/examples/reverse/ later
 
 if __name__ == '__main__':
@@ -22,8 +24,14 @@ if __name__ == '__main__':
 #    appid_aggregate = []
 
 # for each appid
-    ll = 1
+    # ll = 1
+    keyword_list=['fake','scam','fraud']
+    star_list=['1','2']
+    print (datetime.datetime.now())
+    print ('keywords: ',keyword_list,'star: ',star_list)
     for i in rs:
+        hit=False
+        stars=[]
 #        print i['_id']
         #print i["_id"]
         if reivew_db['offline'].find({"appid": i["_id"]}).count() == 0:
@@ -33,7 +41,9 @@ if __name__ == '__main__':
                 review = ireivew['usr_comment']
                 review_title = ireivew['usr_name']
                 review_star = ireivew['usr_star']
-
+                review_date = trans.trans(ireivew['language'],ireivew['usr_date'])
+                stars.append(review_star)
+                # print (ireivew['_id'],ireivew['language'],ireivew['usr_date'],review_date,trans.timestamp2date(review_date))
                 #if review.lower().find(u"廣告") != -1 or review_title.lower().find(u"廣告") != -1:
                 #if review.lower().find("dumb") != -1 or review.lower().find("dumb") != -1:
                 #if review.lower().find("trash") != -1 or review.lower().find("trash") != -1:
@@ -60,16 +70,24 @@ if __name__ == '__main__':
                 # if review.lower().find("virus") != -1 or review_title.lower().find("virus") != -1:
                 #if review.lower().find("torjan") != -1 or review_title.lower().find("torjan") != -1:
                 # if review.lower().find("root") != -1 or review_title.lower().find("root") != -1:
-                if review_star =='1':
-                    if review.lower().find("cheat") != -1 or review_title.lower().find("cheat") != -1:
 
-                        ll += 1
+                if review_star in star_list:
+                    for j in keyword_list:
+
+                        if review.lower().find(j) != -1:
+
+                        # ll += 1
                         # if ll % 20 == 0:
                         #     t = raw_input()
                         # print ireivew
-                        print "\t %s %s %s %s: %s" %(i["_id"], ireivew['usr_star'], ireivew['usr_date'], ireivew['usr_name'], ireivew['usr_comment'])
-
-
+                            hit=True
+                            print ("\t %s %s %s %s %s: %s" %(i["_id"], ireivew['usr_star'], j, trans.timestamp2date(review_date), ireivew['usr_name'], ireivew['usr_comment']))
+        if hit:
+            print (i["_id"])
+            print (len(stars))
+            for j in range(1,6):
+                print (j,':',stars.count(str(j)),end = " ",sep="")
+            print ()
     client.close()
 
-    print "**** done *****"
+    print ("**** done *****")
