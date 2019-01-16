@@ -6,7 +6,29 @@ from langdetect import detect
 import time
 import datetime
 import trans
+import nltk
+import re
+import collections
+
 # use http://gearman.org/examples/reverse/ later
+porter_stemmer = nltk.stem.PorterStemmer()
+wordnet_lemmatizer = nltk.stem.WordNetLemmatizer()
+def stem(str):
+    return porter_stemmer.stem(str)
+    # return wordnet_lemmatizer.lemmatize(str)
+
+def match_stemmed(key,str):
+    ks=stem(key.lower())
+    nltk_tokens = nltk.word_tokenize(str.lower())
+    for w in nltk_tokens:
+        if ks in w:
+            return True
+    return False
+def get_next_word(key,str):
+    try:
+        return str.lower().split(key)[1].split()[0]
+    except:
+        return ''
 
 if __name__ == '__main__':
 
@@ -25,8 +47,11 @@ if __name__ == '__main__':
 
 # for each appid
     # ll = 1
-    keyword_list=['fake','scam','fraud']
-    star_list=['1','2']
+    # keyword_list=['fake','scam','fraud']
+    keyword_list=['dont','do not',"don't"]
+    keyword_list_count={ i : 0 for i in keyword_list }
+    star_list=['1']
+    nextword_list=[]
     print (datetime.datetime.now())
     print ('keywords: ',keyword_list,'star: ',star_list)
     for i in rs:
@@ -76,18 +101,22 @@ if __name__ == '__main__':
 
                         if review.lower().find(j) != -1:
 
+                        # if match_stemmed(j,review):
+                            keyword_list_count[j]+=1
                         # ll += 1
                         # if ll % 20 == 0:
                         #     t = raw_input()
                         # print ireivew
                             hit=True
                             print ("\t %s %s %s %s %s: %s" %(i["_id"], ireivew['usr_star'], j, trans.timestamp2date(review_date), ireivew['usr_name'], ireivew['usr_comment']))
+                            nextword_list.append ((get_next_word(j,review)))
         if hit:
-            print (i["_id"])
-            print (len(stars))
+            print (i["_id"],':',len(stars))
+            # print ()
             for j in range(1,6):
                 print (j,':',stars.count(str(j)),end = " ",sep="")
             print ()
     client.close()
-
+    print (keyword_list_count)
+    print (collections.Counter(nextword_list))
     print ("**** done *****")
