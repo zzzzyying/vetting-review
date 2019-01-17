@@ -1,12 +1,12 @@
 # encoding=utf8
 
 from pymongo import MongoClient
-import trans
+# import trans
 import time
 # use http://gearman.org/examples/reverse/ later
 import sys
-reload(sys)
-sys.setdefaultencoding( "utf-8" )
+# reload(sys)
+# sys.setdefaultencoding( "utf-8" )
 
 from langdetect import detect
 import time
@@ -15,7 +15,7 @@ import trans
 
 def gen_key_list():
     keyList = {}
-    with open("./keyword.txt") as f:
+    with open("./keyword.txt", encoding='UTF-8') as f:
         pkeyList = f.read().splitlines()
 
     current_category = ""
@@ -106,12 +106,13 @@ if __name__ == '__main__':
         for review in cluster[app]:
             ll += 1
             if ll % 20 == 0:
-                t = raw_input() 
-                
+                t = input()
+
             try:
                 date = convertTimeStamp2Str(trans.trans(review['language'], review['usr_date']))
             except:
-                date = "nil"    
-            print("\t[{}] [{}] {} {} {}".format(date, review["type"], review["key"], review["usr_star"], review["usr_comment"]))
-
-
+                date = "nil"
+            # ll += 1
+            # if ll % 20 == 0:
+                # t = input()
+            print("\t[{}] [{}] {} {}".format(date, review["type"], review["usr_star"], review["usr_comment"]))

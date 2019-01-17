@@ -23,7 +23,7 @@ if __name__ == '__main__':
 # for each appid
     for i in rs:
 #        print i['_id']
-        print i["_id"]
+        print (i["_id"])
         annie_db = client['pg_crawler']['apps_annie']
         annie_db_app_obj = annie_db.find({"appid": i["_id"]})
         for j in annie_db_app_obj:
@@ -33,8 +33,8 @@ if __name__ == '__main__':
         '''
         for ireivew in reivew_db['comment'].find({"appid": i["_id"]}):
             #print detect(ireivew['usr_name'])
-            print "\t %s \t %s \t%s: \t%s" %(annie_db_app_inst["category"], ireivew['usr_date'], ireivew['usr_name'], ireivew['usr_comment'])
+            print ("\t %s \t %s \t %s \t%s: \t%s" %(annie_db_app_inst["category"], ireivew['usr_date'], ireivew['usr_star'], ireivew['usr_name'], ireivew['usr_comment']))
 
     client.close()
 
-    print "**** done *****"
+    print ("**** done *****")
