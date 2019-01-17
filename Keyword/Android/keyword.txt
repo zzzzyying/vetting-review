@@ -3,12 +3,11 @@
 ; ref: https://source.android.com/security/reports/Google_Android_Security_PHA_classifications.pdf
 ; ref: https://source.android.com/security/reports/Google_Android_Security_2017_Report_Final.pdf
 
-# ads
+# grayware - ads
 廣告
 只有广告
-
-# Toll fraud
-
+广告
+ads
 
 # Misc
 deceptive
@@ -18,30 +17,59 @@ don't download
 do not download
 fake
 rubbish
-deducts
 dumb
 trash
-广告
 审核
 骗人
 骗子
 骗钱
 欺诈
 自启
-病毒
-话费
 不要下载
 不要安装
 假的
 fake
 can't play
 can't use
-fraud
 cheat
-ads
-virus
-torjan
-root
-airtime
 disappear
 hide
+
+# Backdoor
+backdoor
+
+# Spyware
+spyware
+
+
+# Hostile downloader
+downloader
+
+# Mobile billing fraud
+fraud
+airtime
+deduct
+扣费
+话费
+
+# Phishing
+banking
+credit
+account
+
+# Privilege escalation
+privilege escalation
+
+# Ransomware
+ransomware
+
+# Rooting
+root
+
+# Spam
+spam
+
+# Trojan
+trojan
+病毒
+virus
