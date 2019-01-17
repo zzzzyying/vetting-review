@@ -4,7 +4,8 @@
 ; ref: https://source.android.com/security/reports/Google_Android_Security_2017_Report_Final.pdf
 
 # ads
-
+廣告
+只有广告
 
 # Toll fraud
 
@@ -17,4 +18,28 @@ don't download
 do not download
 fake
 rubbish
-Deducts
+deducts
+dumb
+trash
+广告
+审核
+骗人
+骗子
+骗钱
+欺诈
+自启
+病毒
+话费
+不要下载
+不要安装
+假的
+fake
+can't play
+can't use
+fraud
+cheat
+ads
+virus
+torjan
+root
+airtime
