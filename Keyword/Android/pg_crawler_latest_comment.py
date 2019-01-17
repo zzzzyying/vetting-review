@@ -3,6 +3,7 @@
 from pymongo import MongoClient
 import trans
 import time
+# use http://gearman.org/examples/reverse/ later
 import sys
 reload(sys)
 sys.setdefaultencoding( "utf-8" )
@@ -11,8 +12,6 @@ from langdetect import detect
 import time
 import datetime
 import trans
-# use http://gearman.org/examples/reverse/ later
-
 
 def gen_key_list():
     keyList = {}
@@ -32,7 +31,6 @@ def gen_key_list():
                 else:
                     keyList[current_category] = [p]
 
-    # print(keyList)
     return keyList
 
 
@@ -42,21 +40,23 @@ def gen_pipe_with_key(keys):
     for key in keys.keys():
         tmp_pipe = [{"$match": {"$or": []}}]
 
-        # prepare for [or] type query
-        tmp_or = []
-
-        # prepare for [and] type query
-        # tmp_and = []
-
         for kw in keys[key]:
-            tmp_or.append({"usr_comment": {"$regex": kw}})
+            tmp_pipe[0]["$match"]["$or"].append({"usr_comment": {"$regex": kw, '$options':'i'}})
 
-        tmp_pipe[0]["$match"]["$or"] = tmp_or
         pipe[key] = tmp_pipe
 
-
-    # print(pipe)
     return pipe
+
+
+def bind_key(keys, objs):
+    tmp = []
+    for obji in objs:
+        obji["key"] = []
+        for ix in keys[obji["type"]]:
+            if obji["usr_comment"].lower().find(ix) >= 0:
+                obji["key"].append(ix)
+        tmp.append(obji)
+    return tmp
 
 
 def convertTimeStamp2Str(timeStamp):
@@ -83,6 +83,8 @@ if __name__ == '__main__':
             i["type"] = t
             comments_obj.append(i)
 
+    comments_obj = bind_key(keylist, comments_obj)
+
     cluster = {}
     for obj in comments_obj:
         if obj["appid"] in cluster.keys():
@@ -91,17 +93,25 @@ if __name__ == '__main__':
             cluster[obj["appid"]] = [obj]
 
 
+    client = MongoClient('mongodb://192.168.10.143:27017')
+    reivew_db = client['pg_crawler']
+
     ll = 0
     for app in cluster.keys():
-        print(">> Clustering: {}, Got {} matching reviews.".format(app, len(cluster[app])))
+        related_reviews = len(cluster[app])
+        all_reviews = reivew_db.comment.find({"appid": app}).count()
+
+        print(">> Clustering: {}, [{}] All {} reviews, Got {} closing reviews.".format(app, str(round(related_reviews/all_reviews, 3)*100)+"%", all_reviews, related_reviews))
+        date = "nil"
         for review in cluster[app]:
-            date = "nil"
+            ll += 1
+            if ll % 20 == 0:
+                t = raw_input() 
+                
             try:
                 date = convertTimeStamp2Str(trans.trans(review['language'], review['usr_date']))
             except:
-                date = "nil"
-            ll += 1
-            if ll % 20 == 0:
-                t = raw_input()                
-            print("\t[{}] [{}] {} {}".format(date, review["type"], review["usr_star"], review["usr_comment"]))
+                date = "nil"    
+            print("\t[{}] [{}] {} {} {}".format(date, review["type"], review["key"], review["usr_star"], review["usr_comment"]))
+
 
