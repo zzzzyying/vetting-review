@@ -5,3 +5,5 @@ com.allfor.wooman
 
 com.master.airplane - about 3 hours
 com.master.redwest - about 3 hours
+
+com.picsplay.photo.editor
