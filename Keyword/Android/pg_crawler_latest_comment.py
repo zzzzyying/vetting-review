@@ -12,10 +12,15 @@ from langdetect import detect
 import time
 import datetime
 import trans
+import io
+
+import sys
+reload(sys)
+sys.setdefaultencoding('utf8')
 
 def gen_key_list():
     keyList = {}
-    with open("./keyword.txt", encoding='UTF-8') as f:
+    with io.open("./keyword.txt", encoding='UTF-8') as f:
         pkeyList = f.read().splitlines()
 
     current_category = ""
@@ -38,13 +43,14 @@ def gen_pipe_with_key(keys):
     pipe = {}
 
     for key in keys.keys():
+        
         tmp_pipe = [{"$match": {"$or": []}}]
-
         for kw in keys[key]:
-            tmp_pipe[0]["$match"]["$or"].append({"usr_comment": {"$regex": kw, '$options':'i'}})
+            #tmp_pipe[0]["$match"]["$or"].append({"usr_comment": {"$regex": kw, '$options':'i'}})
+            tmp_pipe[0]["$match"]["$or"].append({"usr_comment": {"$regex": kw, '$options':'i'}, "usr_star": "1"})
 
         pipe[key] = tmp_pipe
-
+        
     return pipe
 
 
@@ -54,6 +60,7 @@ def bind_key(keys, objs):
         obji["key"] = []
         for ix in keys[obji["type"]]:
             if obji["usr_comment"].lower().find(ix) >= 0:
+            #if obji["usr_comment"].lower().find(ix) >= 0 and obji["usr_star"] == "1":
                 obji["key"].append(ix)
         tmp.append(obji)
     return tmp
@@ -98,16 +105,17 @@ if __name__ == '__main__':
 
     ll = 0
     for app in cluster.keys():
+        if reivew_db["offline"].find({"appid": app}).count() != 0:
+            continue
         related_reviews = len(cluster[app])
         all_reviews = reivew_db.comment.find({"appid": app}).count()
 
-        print(">> Clustering: {}, [{}] All {} reviews, Got {} closing reviews.".format(app, str(round(related_reviews/all_reviews, 3)*100)+"%", all_reviews, related_reviews))
+        print(">> Clustering: {}, [{}] All {} reviews, Got {} closing reviews.".format(app, str(round(float(related_reviews)/all_reviews, 3)*100)+"%", all_reviews, related_reviews))
         date = "nil"
         for review in cluster[app]:
             ll += 1
             if ll % 20 == 0:
-                t = input()
-
+                t = raw_input()
             try:
                 date = convertTimeStamp2Str(trans.trans(review['language'], review['usr_date']))
             except:

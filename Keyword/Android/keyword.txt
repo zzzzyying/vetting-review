@@ -41,7 +41,6 @@ backdoor
 # Spyware
 spyware
 
-
 # Hostile downloader
 downloader
 
