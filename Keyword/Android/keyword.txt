@@ -15,25 +15,41 @@ hoax
 scam
 don't download
 do not download
-fake
+
 rubbish
 dumb
 trash
 审核
+
+cheat
+deception
+deceptive
 骗人
 骗子
 骗钱
 欺诈
+หลอก
+
 自启
 不要下载
 不要安装
+
 假的
 fake
+фейк
+
 can't play
 can't use
 cheat
+
 disappear
 hide
+
+sms
+
+抄袭
+Плагиат
+Сворованное
 
 # Backdoor
 backdoor
@@ -72,3 +88,5 @@ spam
 trojan
 病毒
 virus
+Вирусная
+virüs
