@@ -19,6 +19,9 @@ do not download
 rubbish
 dumb
 trash
+垃圾
+useless
+crapware
 审核
 
 cheat
@@ -31,6 +34,8 @@ deceptive
 หลอก
 
 自启
+lock screen
+lockscreen
 不要下载
 不要安装
 
@@ -50,6 +55,8 @@ sms
 抄袭
 Плагиат
 Сворованное
+
+permission
 
 # Backdoor
 backdoor
