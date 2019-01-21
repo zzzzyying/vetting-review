@@ -4,6 +4,9 @@ from nltk.stem.porter import PorterStemmer
 from gensim import corpora, models
 import gensim
 from pymongo import MongoClient
+from langdetect import detect
+
+# landetect later
 
 tokenizer = RegexpTokenizer(r'\w+')
 
@@ -20,7 +23,14 @@ review_db = client['pg_crawler']
 doc_set = []
 for ireview in review_db['comment'].find({"usr_star": "1"}):
     # compile sample documents into a list
-    doc_set.append(ireview["usr_comment"])
+    lan = ""
+    r_raw = ireview["usr_comment"]
+    try:
+        lan = detect(r_raw)
+    except:
+        lan = ""  
+    if lan == "en":    
+        doc_set.append(ireview["usr_comment"])
 
 # list for tokenized documents in loop
 texts = []
