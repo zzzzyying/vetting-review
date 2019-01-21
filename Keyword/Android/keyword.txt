@@ -90,3 +90,4 @@ trojan
 virus
 Вирусная
 virüs
+вирус

@@ -46,5 +46,5 @@ if __name__ == '__main__':
         t = raw_input()
 
         print("*** [{}] [{}] {} {} ***".format(k[0], k[1], reivew_db["comment"].find({"appid":k[0]}).count(), reivew_db["comment"].find({"appid":k[0], "usr_star":"1"}).count()))
-        for r in reivew_db["comment"].find({"appid":k[0]}):
+        for r in reivew_db["comment"].find({"appid":k[0], "usr_star":"1"}):
             print("[{}] [{}]".format(r["usr_star"], r["usr_comment"]))
