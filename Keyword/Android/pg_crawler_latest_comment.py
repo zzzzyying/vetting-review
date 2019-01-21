@@ -4,7 +4,7 @@ from pymongo import MongoClient
 # import trans
 import time
 # use http://gearman.org/examples/reverse/ later
-import sys
+# import sys
 # reload(sys)
 # sys.setdefaultencoding( "utf-8" )
 
@@ -13,10 +13,11 @@ import time
 import datetime
 import trans
 import io
+import re
 
 import sys
-reload(sys)
-sys.setdefaultencoding('utf8')
+# reload(sys)
+# sys.setdefaultencoding('utf8')
 
 def gen_key_list():
     keyList = {}
@@ -43,14 +44,14 @@ def gen_pipe_with_key(keys):
     pipe = {}
 
     for key in keys.keys():
-        
+
         tmp_pipe = [{"$match": {"$or": []}}]
         for kw in keys[key]:
             #tmp_pipe[0]["$match"]["$or"].append({"usr_comment": {"$regex": kw, '$options':'i'}})
             tmp_pipe[0]["$match"]["$or"].append({"usr_comment": {"$regex": kw, '$options':'i'}, "usr_star": "1"})
 
         pipe[key] = tmp_pipe
-        
+
     return pipe
 
 
@@ -70,7 +71,9 @@ def convertTimeStamp2Str(timeStamp):
     tArray = time.localtime(timeStamp)
     return time.strftime("%Y-%m-%d", tArray)
 
-
+def removeTags(str):
+    return re.compile('<div.*<\/div>').sub('',str)
+    
 if __name__ == '__main__':
 
     # generate key word dict
@@ -114,8 +117,8 @@ if __name__ == '__main__':
         date = "nil"
         for review in cluster[app]:
             ll += 1
-            if ll % 20 == 0:
-                t = raw_input()
+            if ll % 40 == 0:
+                t = input()
             try:
                 date = convertTimeStamp2Str(trans.trans(review['language'], review['usr_date']))
             except:
