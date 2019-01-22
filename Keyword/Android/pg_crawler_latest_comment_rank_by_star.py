@@ -46,4 +46,5 @@ if __name__ == '__main__':
         print("*** [{}] [{}] {} {} ***".format(k[0], k[1], reivew_db["comment"].find({"appid":k[0]}).count(), reivew_db["comment"].find({"appid":k[0], "usr_star":"1"}).count()))
         for r in reivew_db["comment"].find({"appid":k[0], "usr_star":"1"}):
             print("[{}] [{}]".format(r["usr_star"], r["usr_comment"]))
+        print "https://play.google.com/store/apps/details?id=" + k[0] + "\n" 
         t = raw_input()
