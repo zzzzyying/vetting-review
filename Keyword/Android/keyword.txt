@@ -91,3 +91,18 @@ virus
 Вирусная
 virüs
 вирус
+
+; Impostor
+; Misrepresentor
+; - Viable misrepresentor
+; - Fictitious misrepresentor
+; Madware(mobile adware)
+; Dialer
+; Prank Program
+; Scareware
+; Rooting Tool
+; Spyware/trackware
+; Remote Access Tool (RAT)
+; Dropper
+; Hijacker
+

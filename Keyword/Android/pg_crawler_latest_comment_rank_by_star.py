@@ -43,8 +43,7 @@ if __name__ == '__main__':
     # print 1 by 1
     s_review = sorted(rank_info.items(), key = lambda x:x[1], reverse = True)
     for k in s_review:
-        t = raw_input()
-
         print("*** [{}] [{}] {} {} ***".format(k[0], k[1], reivew_db["comment"].find({"appid":k[0]}).count(), reivew_db["comment"].find({"appid":k[0], "usr_star":"1"}).count()))
         for r in reivew_db["comment"].find({"appid":k[0], "usr_star":"1"}):
             print("[{}] [{}]".format(r["usr_star"], r["usr_comment"]))
+        t = raw_input()
