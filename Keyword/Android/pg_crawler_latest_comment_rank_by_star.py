@@ -4,8 +4,7 @@ from pymongo import MongoClient
 import time
 # use http://gearman.org/examples/reverse/ later
 import sys
-reload(sys)
-sys.setdefaultencoding('utf8')
+import pycompatibility as compat
 
 from langdetect import detect
 import io
@@ -25,13 +24,13 @@ if __name__ == '__main__':
         rank_info[j["appid"]] = float(0)
     
     # remove reported pkg
-    for k in rank_info.keys():
+    for k in list(rank_info):
         if review_db_util.has_offline(k):
-            if rank_info.has_key(k):            
-                del rank_info[k]            
+            if k in rank_info:
+                del rank_info[k]
         if review_db_util.has_reported(k):
-            if rank_info.has_key(k):
-                del rank_info[k]            
+            if k in rank_info:
+                del rank_info[k]
     # get percentage of 1 ranked app
     for k in rank_info.keys():
         total = reivew_db["comment"].find({"appid":k}).count()
@@ -39,12 +38,12 @@ if __name__ == '__main__':
         if total!= 0:
             rank_info[k] = float(p_total) / total
         else:
-            rank_info[k] = 0    
+            rank_info[k] = 0
     # print 1 by 1
     s_review = sorted(rank_info.items(), key = lambda x:x[1], reverse = True)
     for k in s_review:
         print("*** [{}] [{}] {} {} ***".format(k[0], k[1], reivew_db["comment"].find({"appid":k[0]}).count(), reivew_db["comment"].find({"appid":k[0], "usr_star":"1"}).count()))
         for r in reivew_db["comment"].find({"appid":k[0], "usr_star":"1"}):
             print("[{}] [{}]".format(r["usr_star"], r["usr_comment"]))
-        print "https://play.google.com/store/apps/details?id=" + k[0] + "\n" 
-        t = raw_input()
+        print ("https://play.google.com/store/apps/details?id=" + k[0] + "\n")
+        compat.wait4input()

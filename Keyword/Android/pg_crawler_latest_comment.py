@@ -16,8 +16,7 @@ import io
 import re
 
 import sys
-# reload(sys)
-# sys.setdefaultencoding('utf8')
+import pycompatibility as compat
 
 def gen_key_list():
     keyList = {}
@@ -118,7 +117,7 @@ if __name__ == '__main__':
         for review in cluster[app]:
             ll += 1
             if ll % 40 == 0:
-                t = input()
+                compat.wait4input()
             try:
                 date = convertTimeStamp2Str(trans.trans(review['language'], review['usr_date']))
             except:

@@ -1,6 +1,6 @@
 #encoding=utf8
 import sys, os
-
+import pycompatibility as compat
 from pymongo import MongoClient
 from langdetect import detect
 #from google.cloud import translate
@@ -35,7 +35,7 @@ if __name__ == '__main__':
             #print detect(ireivew['usr_name'])
             print ("\t %s \t %s \t %s \t%s: \t%s" %(annie_db_app_inst["category"], ireivew['usr_date'], ireivew['usr_star'], ireivew['usr_name'], ireivew['usr_comment']))
 
-        t = raw_input()
+        compat.wait4input()
     client.close()
 
     print ("**** done *****")
