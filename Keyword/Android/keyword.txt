@@ -34,6 +34,7 @@ deceptive
 หลอก
 
 自启
+popup
 lock screen
 lockscreen
 不要下载
@@ -57,6 +58,8 @@ sms
 Сворованное
 
 permission
+权限
+隐私
 
 # Backdoor
 backdoor
