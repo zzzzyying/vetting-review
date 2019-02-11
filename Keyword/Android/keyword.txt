@@ -11,10 +11,15 @@ ads
 
 # Misc
 deceptive
-hoax
+
 scam
 don't download
 do not download
+
+hoax
+prank
+gag
+
 
 rubbish
 dumb
@@ -115,4 +120,7 @@ virüs
 ; Remote Access Tool (RAT)
 ; Dropper
 ; Hijacker
+
+; clipper
+; https://www.welivesecurity.com/2019/02/08/first-clipper-malware-google-play/
 
