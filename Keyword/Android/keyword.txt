@@ -8,6 +8,8 @@
 只有广告
 广告
 ads
+реклам
+reklam
 
 # Misc
 deceptive
@@ -48,6 +50,7 @@ lockscreen
 假的
 fake
 фейк
+yanlış
 
 can't play
 can't use

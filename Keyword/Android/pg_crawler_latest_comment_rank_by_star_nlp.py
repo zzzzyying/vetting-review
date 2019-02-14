@@ -2,6 +2,7 @@
 from pymongo import MongoClient
 # import trans
 import time
+import datetime
 # use http://gearman.org/examples/reverse/ later
 import sys
 import pycompatibility as compat
@@ -12,7 +13,7 @@ import re
 import pg_crawler_latest_comment_util as review_util
 
 import nlp
-
+from trans import timestamp2date,trans
 def removeTags(str):
     return re.compile('<div.*<\/div>').sub('',str)
     
@@ -45,14 +46,20 @@ if __name__ == '__main__':
         else:
             rank_info[k] = 0
     # print 1 by 1
-    threshold=0.3
+    threshold=0.2
+    now = datetime.date.today()
+    delta_days = 7
     doc_set = {}
     s_review = sorted(rank_info.items(), key = lambda x:x[1], reverse = True)
     for k in s_review:
         str_en=""
         print("*** [{}] [{}] {} {} ***".format(k[0], k[1], reivew_db["comment"].find({"appid":k[0]}).count(), reivew_db["comment"].find({"appid":k[0], "usr_star":"1"}).count()))
         for r in reivew_db["comment"].find({"appid":k[0], "usr_star":"1"}):
-            print("[{}] [{}] [{}]".format(r["language"],r["usr_star"], r["usr_comment"]))
+            date=timestamp2date(trans(r["language"],r["usr_date"]))
+            date_obj=datetime.datetime.strptime(date, '%Y-%m-%d').date()
+            # if (now-date_obj).days<=delta_days:
+            print("[{}] [{}] {} [{}]".format(r["language"],r["usr_star"], date , r["usr_comment"]))
+            # compat.wait4input()
             if k[1]>threshold:
                 # str_en+=(removeTags(r["usr_comment"])+" ")
                 if r["usr_comment"]!='':
@@ -68,9 +75,15 @@ if __name__ == '__main__':
     # nlp.lda(doc_set["EN"],10,5,10)
     # nlp.count("EN",doc_set["EN"])
     # nlp.count("CN",doc_set["CN"])
-    kwdlst_en=(['download'])
-    kwdlst_cn=(['下载'])
+    # kwdlst_en=(['download','install'])
+    # kwdlst_cn=(['下载','安装'])
     en_corpus=nlp.gen_corpus("EN",doc_set["EN"])
     cn_corpus=nlp.gen_corpus("CN",doc_set["CN"])
-    nlp.show_revelant(kwdlst_en,en_corpus)
-    nlp.show_revelant(kwdlst_cn,cn_corpus)
+    # ru_corpus=nlp.gen_corpus("RU",doc_set["RU"])
+    # tr_corpus=nlp.gen_corpus("TR",doc_set["TR"])
+    nlp.count_corpus(en_corpus)
+    nlp.count_corpus(cn_corpus)
+    # nlp.count_corpus(ru_corpus)
+    # nlp.count_corpus(tr_corpus)
+    # nlp.show_revelant(kwdlst_en,en_corpus)
+    # nlp.show_revelant(kwdlst_cn,cn_corpus)

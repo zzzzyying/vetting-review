@@ -1,6 +1,8 @@
 from nltk.tokenize import RegexpTokenizer
 from stop_words import get_stop_words
 from nltk.stem.porter import PorterStemmer
+from nltk.stem.snowball import SnowballStemmer
+from TurkishStemmer import TurkishStemmer
 from gensim import corpora, models
 import gensim
 from pymongo import MongoClient
@@ -12,9 +14,9 @@ from progress.bar import Bar
 # landetect later
 tokenizer = RegexpTokenizer(r'\w+')
 # create English stop words list
-en_stop = get_stop_words('en')
+# en_stop = get_stop_words('en')
 # Create p_stemmer of class PorterStemmer
-p_stemmer = PorterStemmer()
+# p_stemmer = PorterStemmer()
 
 def lda(doc_set,num_topics,num_words,passes):#for EN only
     texts=gen_corpus('EN',doc_set)
@@ -59,16 +61,23 @@ def gen_corpus(lan,doc_set):
             bar.next()
         # print (stemmed)
         bar.finish()
-    if lan=='EN':
+    if lan in ['EN','RU','TR']:
         # loop through document list
         for i in doc_set:
             # clean and tokenize document string
             raw = i.lower()
             tokens = tokenizer.tokenize(raw)
             # remove stop words from tokens
-            stopped_tokens = [i for i in tokens if not i in en_stop]
+            stopped_tokens = [i for i in tokens if not i in get_stop_words(lan.lower())]
             # stem tokens
-            stemmed_tokens = [p_stemmer.stem(i) for i in stopped_tokens]
+            stemmer = PorterStemmer()
+            if lan =='EN':
+                stemmer = PorterStemmer()
+            if lan =='RU':
+                stemmer = SnowballStemmer("russian")
+            if lan =='TR':
+                stemmer = TurkishStemmer()
+            stemmed_tokens = [stemmer.stem(i) for i in stopped_tokens]
             # add tokens to list
             texts.append(stemmed_tokens)
             bar.next()
