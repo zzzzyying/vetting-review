@@ -12,40 +12,18 @@ from langdetect import detect
 import time
 import datetime
 import trans
-import io
 import re
-
 import sys
 import pycompatibility as compat
+import pg_crawler_latest_comment_util as review_util
 
-def gen_key_list():
-    keyList = {}
-    with io.open("./keyword.txt", encoding='UTF-8') as f:
-        pkeyList = f.read().splitlines()
-
-    current_category = ""
-    for p in pkeyList:
-        if p:
-            if p.startswith(";"):
-                continue
-            elif p.startswith("#"):
-                current_category = p.split()[1]
-            else:
-                if current_category in keyList.keys():
-                    keyList[current_category].append(p)
-                else:
-                    keyList[current_category] = [p]
-
-    return keyList
-
-
-def gen_pipe_with_key(keys):
+def gen_pipe_with_key(keywords):
     pipe = {}
 
-    for key in keys.keys():
+    for key in keywords.keys():
 
         tmp_pipe = [{"$match": {"$or": []}}]
-        for kw in keys[key]:
+        for kw in keywords[key]:
             #tmp_pipe[0]["$match"]["$or"].append({"usr_comment": {"$regex": kw, '$options':'i'}})
             tmp_pipe[0]["$match"]["$or"].append({"usr_comment": {"$regex": kw, '$options':'i'}, "usr_star": "1"})
 
@@ -54,16 +32,16 @@ def gen_pipe_with_key(keys):
     return pipe
 
 
-def bind_key(keys, objs):
-    tmp = []
+def append_keyword(keywords, objs):
+    retMe = []
     for obji in objs:
         obji["key"] = []
-        for ix in keys[obji["type"]]:
+        for ix in keywords[obji["type"]]:
             if obji["usr_comment"].lower().find(ix) >= 0:
             #if obji["usr_comment"].lower().find(ix) >= 0 and obji["usr_star"] == "1":
                 obji["key"].append(ix)
-        tmp.append(obji)
-    return tmp
+        retMe.append(obji)
+    return retMe
 
 
 def convertTimeStamp2Str(timeStamp):
@@ -74,9 +52,11 @@ def removeTags(str):
     return re.compile('<div.*<\/div>').sub('',str)
     
 if __name__ == '__main__':
-
+    
     # generate key word dict
-    keylist = gen_key_list()
+    review_db_util = review_util.pg_crawler_latest_comment_util()
+    keylist = review_db_util.get_keywords_list("./keyword.txt")
+    
     # generate query pipe
     p = gen_pipe_with_key(keylist)
 
@@ -85,14 +65,14 @@ if __name__ == '__main__':
 
     comments_obj = []
 
-    for t in p.keys():
-        rs = reivew_db['comment'].aggregate(pipeline=p[t])
+    for catetory in p.keys():
+        rs = reivew_db['comment'].aggregate(pipeline=p[catetory])
 
         for i in rs:
-            i["type"] = t
+            i["type"] = catetory
             comments_obj.append(i)
 
-    comments_obj = bind_key(keylist, comments_obj)
+    comments_obj = append_keyword(keylist, comments_obj)
 
     cluster = {}
     for obj in comments_obj:
@@ -106,15 +86,18 @@ if __name__ == '__main__':
     reivew_db = client['pg_crawler']
 
     ll = 0
-    for app in cluster.keys():
-        if reivew_db["offline"].find({"appid": app}).count() != 0:
+    for appid in cluster.keys():
+        if review_db_util.has_offline(appid):
             continue
-        related_reviews = len(cluster[app])
-        all_reviews = reivew_db.comment.find({"appid": app}).count()
+        if review_db_util.has_reported(appid):
+            continue
 
-        print(">> Clustering: {}, [{}] All {} reviews, Got {} closing reviews.".format(app, str(round(float(related_reviews)/all_reviews, 3)*100)+"%", all_reviews, related_reviews))
+        related_reviews = len(cluster[appid])
+        all_reviews = reivew_db.comment.find({"appid": appid}).count()
+
+        print(">> Clustering: {}, [{}] All {} reviews, {} reviews hit keyword.".format(appid, str(round(float(related_reviews)/all_reviews, 3)*100)+"%", all_reviews, related_reviews))
         date = "nil"
-        for review in cluster[app]:
+        for review in cluster[appid]:
             ll += 1
             if ll % 40 == 0:
                 compat.wait4input()
@@ -125,4 +108,4 @@ if __name__ == '__main__':
             # ll += 1
             # if ll % 20 == 0:
                 # t = input()
-            print("\t[{}] [{}] {} {}".format(date, review["type"], review["usr_star"], review["usr_comment"]))
+            print("\t[{}] [{}] [{}] [{}] {}".format(date, review["type"], review["usr_star"], review["key"], review["usr_comment"]))
