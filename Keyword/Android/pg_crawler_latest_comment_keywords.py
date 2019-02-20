@@ -108,4 +108,9 @@ if __name__ == '__main__':
             # ll += 1
             # if ll % 20 == 0:
                 # t = input()
-            print("\t[{}] [{}] [{}] [{}] {}".format(date, review["type"], review["usr_star"], review["key"], review["usr_comment"]))
+            keywords = ""
+            for k in review["key"]:
+                keywords += k
+                keywords += " "
+                
+            print("\t[{}] [{}] [{}] [{}] {}".format(date, review["type"], review["usr_star"], keywords.strip(), review["usr_comment"]))
