@@ -1,9 +1,0 @@
-; to review 1) end-user's review 2) life cycle of a PHA
-com.best.bestweb
-com.mzone.mobizone
-com.allfor.wooman
-
-com.master.airplane - about 3 hours
-com.master.redwest - about 3 hours
-
-com.picsplay.photo.editor
