@@ -111,8 +111,8 @@ if __name__ == "__main__":
 # https://www.jianshu.com/p/5f04e97d1b27   
 # model.save_word2vec_format('/tmp/mymodel.txt',binary=False)    
     print "**** start ****"
-    myEmbedding = embedding("./stopwords.txt")
-    myEmbedding.gen_model("/data/literal", "/data/corpus_bak", "./model")
+    myEmbedding = embedding("./stopwords_chs.txt")
+    myEmbedding.gen_model("/data/literal", "/data/corpus_bak", "./janus_chs_model")
     myEmbedding.show_static_data()
 
 # 电子邮件
